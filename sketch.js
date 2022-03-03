@@ -15,26 +15,26 @@ var gameOver, restart;
 
 
 function preload(){
-  jumpSound = loadSound("assets/sounds/jump.wav")
-  collidedSound = loadSound("assets/sounds/collided.wav")
+  jumpSound = loadSound("jump.wav")
+  collidedSound = loadSound("collided.wav")
   
-  backgroundImg = loadImage("assets/backgroundImg.png")
-  sunAnimation = loadImage("assets/sun.png");
+  backgroundImg = loadImage("backgroundImg.png")
+  sunAnimation = loadImage("sun.png");
   
-  trex_running = loadAnimation("assets/trex_2.png","assets/trex_1.png","assets/trex_3.png");
-  trex_collided = loadAnimation("assets/trex_collided.png");
+  trex_running = loadAnimation("trex_2.png","trex_1.png","trex_3.png");
+  trex_collided = loadAnimation("trex_collided.png");
   
-  groundImage = loadImage("assets/ground.png");
+  groundImage = loadImage("ground.png");
   
-  cloudImage = loadImage("assets/cloud.png");
+  cloudImage = loadImage("cloud.png");
   
-  obstacle1 = loadImage("assets/obstacle1.png");
-  obstacle2 = loadImage("assets/obstacle2.png");
-  obstacle3 = loadImage("assets/obstacle3.png");
-  obstacle4 = loadImage("assets/obstacle4.png");
+  obstacle1 = loadImage("obstacle1.png");
+  obstacle2 = loadImage("obstacle2.png");
+  obstacle3 = loadImage("obstacle3.png");
+  obstacle4 = loadImage("obstacle4.png");
   
-  gameOverImg = loadImage("assets/gameOver.png");
-  restartImg = loadImage("assets/restart.png");
+  gameOverImg = loadImage("gameOver.png");
+  restartImg = loadImage("restart.png");
 }
 
 function setup() {
@@ -50,8 +50,7 @@ function setup() {
   trex.addAnimation("running", trex_running);
   trex.addAnimation("collided", trex_collided);
   trex.setCollider('circle',0,0,350)
-  trex.scale = 0.08
-  // trex.debug=true
+  trex.scale = 0.08;
   
   invisibleGround = createSprite(width/2,height-10,width,125);  
   invisibleGround.shapeColor = "#f4cbaa";
@@ -70,10 +69,6 @@ function setup() {
   gameOver.scale = 0.5;
   restart.scale = 0.1;
 
-
-  ground.depth=trex.depth
-  trex.depth=trex.depth+1
-
   gameOver.visible = false;
   restart.visible = false;
   
@@ -88,7 +83,6 @@ function setup() {
 
 function draw() {
   //trex.debug = true;
-  //console.log(height)
   background(backgroundImg);
   textSize(20);
   fill("black")
@@ -99,8 +93,8 @@ function draw() {
     score = score + Math.round(getFrameRate()/60);
     ground.velocityX = -(6 + 3*score/100);
     
-    if(touches.length > 0  || (keyDown("space") && trex.y  >= height-120)) {
-      jumpSound.play()
+    if((touches.length > 0 || keyDown("SPACE")) && trex.y  >= height-120) {
+      jumpSound.play( )
       trex.velocityY = -10;
        touches = [];
     }
@@ -137,7 +131,7 @@ function draw() {
     obstaclesGroup.setLifetimeEach(-1);
     cloudsGroup.setLifetimeEach(-1);
     
-    if(touches.length>0 || mousePressedOver(restart)) {      
+    if(touches.length>0 || keyDown("SPACE") || mousePressedOver(restart)) {      
       reset();
       touches = []
     }
@@ -147,15 +141,9 @@ function draw() {
   drawSprites();
 }
 
-function reset(){
-  gameState=PLAY;
-  obstaclesGroup.destroyEach();
-  cloudsGroup.destroyEach();
-  score=0;
-}
 function spawnClouds() {
   //write code here to spawn the clouds
-  if (frameCount % 150 === 0) {
+  if (frameCount % 60 === 0) {
     var cloud = createSprite(width+20,height-300,40,10);
     cloud.y = Math.round(random(100,220));
     cloud.addImage(cloudImage);
@@ -163,7 +151,7 @@ function spawnClouds() {
     cloud.velocityX = -3;
     
      //assign lifetime to the variable
-    cloud.lifetime = 600;
+    cloud.lifetime = 300;
     
     //adjust the depth
     cloud.depth = trex.depth;
